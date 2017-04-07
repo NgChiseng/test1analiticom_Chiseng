@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404,redirect
-# Usado para sacar datos de la base de datos y usarlo en la plantilla.
+# Used for import database information and timezone information.
 from django.utils import timezone
 from .models import Post
-# Usado para sacar la clase PostForm
-from .forms import PostForm
+# Used for import the PostForm class and UserProfileForm class.
+from .forms import PostForm,UserForm,UserProfileForm
 # Create your views here.
 
 # Function that receive a request and give the template post_list.html.
@@ -26,6 +26,7 @@ def post_list(request):
 # @author [Chiseng Ng]
 #
 # @param [request] request Request of the page.
+# @param [post.pk] pk primary key of a post object.
 #
 # @returns [NONE]
 def post_detail(request, pk):
@@ -33,7 +34,7 @@ def post_detail(request, pk):
 	return render(request, 'blog/post_detail.html', {'post': post})
 
 # Function that call a Postform and send to post_edit template.
-#If receive a POST request for validate it, complete it, and save it.
+#If receive a POST request then validate it, complete it, and save it.
 #
 # @date [06/04/2017]
 #
@@ -54,3 +55,28 @@ def post_new(request):
 	else:
 		form = PostForm()
 	return render(request, 'blog/post_edit.html', {'form': form})
+
+# Function that manage the register of the users.
+#If receive a POST request then validate it, complete it, and save it.
+#
+# @date [07/04/2017]
+#
+# @author [Chiseng Ng]
+#
+# @param [request] request Request of the page.
+#
+# @returns [NONE]
+def post_register(request):
+    if request.method == 'POST':
+        uf = UserForm(request.POST, prefix='user')
+        upf = UserProfileForm(request.POST, prefix='userprofile')
+        if uf.is_valid() * upf.is_valid():
+            user = uf.save()
+            userprofile = upf.save(commit=False)
+            userprofile.user = user
+            userprofile.save()
+            return redirect('post_list')
+    else:
+        uf = UserForm(prefix='user')
+        upf = UserProfileForm(prefix='userprofile')
+    return render(request, 'blog/post_register.html', {'form':uf})

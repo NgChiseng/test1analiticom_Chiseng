@@ -18,6 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    # Hace que 'http://127.0.0.1:8000/' e importa las urls de blog.
+    # It makes the blog page like main page('http://127.0.0.1:8000/') and import its urls.
     url(r'', include('blog.urls')),
 ]

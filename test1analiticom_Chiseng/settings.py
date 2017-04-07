@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Toma el blog como aplicacion.
+    # Take the blog app.
     'blog',
     # For register
     # 'django.contrib.sites',
