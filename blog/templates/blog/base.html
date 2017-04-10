@@ -12,8 +12,16 @@
 	</head>
 	<body>
 		<div class="page-header">
-			<a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
 			<h1><a href="">My Tutorial Blog</a></h1>
+			<div>
+				{% if user.is_authenticated %}
+					<a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
+					<a href="{% url 'log_out' %}">log out</a>
+				{% else %}
+					<a href="{% url 'post_register' %}">register</a>
+					<a href="{% url 'log_in' %}">log in</a>
+				{% endif %}
+			</div>
 		</div>
 		<div class="content container">
         	<div class="row">

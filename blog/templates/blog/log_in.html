@@ -17,19 +17,21 @@
 	</head>
 	<body>
 		<div class="container">
-			<h1>User Register</h1>
+			<h1>User Log In</h1>
 				
 		<form method="POST" class="form-horizontal">
 	    	{% csrf_token %}
 	    	<div class="form-group">
-	    		{{form.as_p}}
 	    		<!--
+	    		{{form.as_p}}
 	    		<p><label for="username">Username:</label>{{form.username}}</p>
 	    	</div>
 	    	<div class="form-group">
 	    		<p><label for=password>Password:</label>{{form.password}}</p>
-	    	</div>
 	    		-->
+	    		Username: <input type="text" name="username" value=""><br>
+				Password: <input type="password" name="password" value=""><br>
+	    	</div>
 	   		<div class="form-group"> 
     			<div class="col-sm-offset-2 col-sm-10">
       				<button type="submit" class="btn btn-default">Submit</button>

@@ -3,7 +3,11 @@ from django.shortcuts import render, get_object_or_404,redirect
 from django.utils import timezone
 from .models import Post
 # Used for import the PostForm class and UserProfileForm class.
-from .forms import PostForm,UserForm,UserProfileForm
+from .forms import PostForm,UserForm,UserProfileForm, UserLogin
+
+from django.contrib.auth.hashers import make_password
+
+from django.contrib.auth import authenticate, login
 # Create your views here.
 
 # Function that receive a request and give the template post_list.html.
@@ -16,6 +20,7 @@ from .forms import PostForm,UserForm,UserProfileForm
 #
 # @returns [NONE]
 def post_list(request):
+	#users = User.objects.all()
 	posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
 	return render(request, 'blog/post_list.html', {'posts': posts})
 
@@ -69,14 +74,39 @@ def post_new(request):
 def post_register(request):
     if request.method == 'POST':
         uf = UserForm(request.POST, prefix='user')
-        upf = UserProfileForm(request.POST, prefix='userprofile')
-        if uf.is_valid() * upf.is_valid():
-            user = uf.save()
-            userprofile = upf.save(commit=False)
-            userprofile.user = user
-            userprofile.save()
+        #upf = UserProfileForm(request.POST, prefix='userprofile')
+        if uf.is_valid(): #* upf.is_valid():
+            user = uf.save(commit=False)
+            user.password = make_password(user.password)
+            user.save()
+            #userprofile = upf.save(commit=False)
+            #userprofile.user = user
+            #userprofile.save()
             return redirect('post_list')
     else:
         uf = UserForm(prefix='user')
         upf = UserProfileForm(prefix='userprofile')
     return render(request, 'blog/post_register.html', {'form':uf})
+
+# Function that manage the log in of the users.
+#
+# @date [10/04/2017]
+#
+# @author [Chiseng Ng]
+#
+# @param [request] request Request of the page.
+#
+# @returns [NONE]
+def log_in(request):
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=username, password=password)
+		if user is not None:
+			login(request, user)
+			return redirect('post_list')
+		else:
+			return redirect('log_in')
+	else:
+		pass
+	return render(request,'blog/log_in.html')
