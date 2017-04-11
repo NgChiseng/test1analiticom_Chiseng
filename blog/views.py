@@ -7,7 +7,7 @@ from .forms import PostForm,UserForm,UserProfileForm, UserLogin
 
 from django.contrib.auth.hashers import make_password
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 # Create your views here.
 
 # Function that receive a request and give the template post_list.html.
@@ -20,9 +20,9 @@ from django.contrib.auth import authenticate, login
 #
 # @returns [NONE]
 def post_list(request):
-	#users = User.objects.all()
+	user = request.user
 	posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-	return render(request, 'blog/post_list.html', {'posts': posts})
+	return render(request, 'blog/post_list.html', {'posts': posts}, {'user':user})
 
 # Function that receive a request and  a primary key, then give the template post_detail.html.
 #
@@ -110,3 +110,16 @@ def log_in(request):
 	else:
 		pass
 	return render(request,'blog/log_in.html')
+
+# Function that manage the log out of the users.
+#
+# @date [10/04/2017]
+#
+# @author [Chiseng Ng]
+#
+# @param [request] request Request of the page.
+#
+# @returns [NONE]
+def log_out(request):
+	logout(request)
+	return redirect('post_list')
